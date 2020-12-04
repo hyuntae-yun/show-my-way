@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{%block title%}
+Home
+{%endblock%}
+
+{%block button%}
+<ul class="nav nav-pills pull-right">
+  <li role="presentation" class="active"><a href="/">Go back to main</a></li>
+  <li role="presentation" class="active"><a href="/{{u_id}}/">Home</a></li>
+  <li role="presentation"><a href="/{{u_id}}/add">Add Points Group</a></li>
+  <li role="presentation"><a href="/{{u_id}}/del">Delete Points Group</a></li>
+  <li role="presentation"><a href="/{{u_id}}/rec">Find path</a></li>
+</ul>
+{%endblock%}          
+
+{%block main_body%}
+<meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .truck {
+            margin: -10px -10px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: #3887be;
+            pointer-events: none;
+        }
+      #map {
+        position: relative;
+		    width: 700px;
+        height: 700px;
+        /* top-margin: -350px;
+        left-margin: -350px; */
+      }
+      #sel_button{
+        border-top-left-radius: 5px; 
+        border-bottom-left-radius: 5px; 
+        border-top-right-radius: 5px; 
+        border-bottom-right-radius: 5px; 
+        border: 1px solid skyblue; 
+        background-color: skyblue;
+        color: white; 
+        padding: 5px; 
+        margin-top: 10px
+    }
+    #sel_button:hover{
+        color:white; background-color: rgb(3, 130, 180);
+    }
+    </style>
+    <div id='map' class='container'></div>
+    <script src="../static/js/mapbox_main.js"></script>
+    <script type="text/javascript">
+      function spread() {
+        var p_data={{p_data}};
+        p_data.forEach(function(d,i){   
+          var marker= new mapboxgl.Marker()
+          .setLngLat(d).addTo(map);
+        })
+    }
+    </script>
+    <body onload="spread();">
+    {% if data != None  %}
+    <center>
+      <form method="POST" action="/{{u_id}}/">
+        <br/>
+          <div class="nametag">
+              <select name="column">
+                  {% for row in data %}
+                  <option value={{row.id}} > {{row.Name}} </option>
+                  {% endfor %}
+              </select>
+              <button type="submit " id="sel_button">
+                  Watch map
+              </button>
+          </div>
+      </form>
+  </center>
+</br>
+  <center>
+      <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Group Name</th>
+            </tr>
+          </thead>
+          {% for row in data %}
+          <tbody>
+            <tr>
+              <th scope="row">{{ row.id }}</th>
+              <td>{{ row.Name }}</td>
+            </tr>
+          </tbody>
+          {% endfor %}
+      </table>
+      <br/>
+  </center>  
+  {%endif%}
+{%endblock%}

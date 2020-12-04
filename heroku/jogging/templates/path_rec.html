@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{%block title%}
+Find path
+{%endblock%}
+
+{%block button%}
+<ul class="nav nav-pills pull-right">
+    <li role="presentation" class="active"><a href="/">Go back to main</a></li>
+    <li role="presentation" class="active"><a href="/{{u_id}}/">Home</a></li>
+    <li role="presentation"><a href="/{{u_id}}/add">Add Points Group</a></li>
+    <li role="presentation"><a href="/{{u_id}}/del">Delete Points Group</a></li>
+    <li role="presentation"><a href="/{{u_id}}/rec">Find path</a></li>
+  </ul>
+{%endblock%}          
+
+{%block main_body%}
+<meta charset='utf-8' />
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .truck {
+        margin: -10px -10px;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        background: #3887be;
+        pointer-events: none;
+    }
+    #map {  
+    position: relative;
+    width: 700px;
+    height: 700px;
+    left: -10%; 
+    /* top-margin: -350px;
+    left-margin: -350px; */
+    }
+    #like_button{ 
+        border-top-left-radius: 5px; 
+        border-bottom-left-radius: 5px; 
+        margin-right:-4px; 
+        } 
+    #dislike_button{ 
+        border-top-right-radius: 5px; 
+        border-bottom-right-radius: 5px; 
+        margin-left:-3px; 
+        }
+    #btn_group button{ 
+        border: 1px solid skyblue; 
+        background-color: rgba(0,0,0,0);
+        color: skyblue; 
+        padding: 5px; 
+    } 
+    #btn_group button:hover{ 
+        color:white; background-color: skyblue; 
+    }
+    #rec_button{
+        border-top-left-radius: 5px; 
+        border-bottom-left-radius: 5px; 
+        border-top-right-radius: 5px; 
+        border-bottom-right-radius: 5px; 
+        border: 1px solid skyblue; 
+        background-color: skyblue;
+        color: white; 
+        padding: 5px; 
+        margin-top: 10px
+    }
+    #rec_button:hover{
+        color:white; background-color: rgb(3, 130, 180);
+    }
+    select{    
+            height: 2.5em;
+            width: 220px;
+            padding: 0 10px;
+            box-shadow: 3px 3px 10px black;
+            outline: none;
+            border: none;
+            color:skyblue;
+        }
+</style>
+<center>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Point Group Name</th>
+          </tr>
+        </thead>
+        {% for row in data %}
+        <tbody>
+          <tr>
+            <th scope="row">{{ row.id }}</th>
+            <td>{{ row.Name }}</td>
+          </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    <br/>
+</center>
+<form method="POST" action="/{{u_id}}/rec"> 
+    <select name="column">
+        {% for row in data %}
+        <option value={{row.id}} > {{row.Name}} </option>
+        {% endfor %}
+    </select>
+    <br/>
+    <button type="submit" id="rec_button" onsubmit="show_path();">
+        Recommendate the Route
+    </button>
+</form>
+<br/>
+<div id='map' ></div>
+<script src="../static/js/mapbox_rec.js"></script>
+<script type="text/javascript">
+var json;
+var jdata;
+var routes;
+var geojson;
+var geoj;
+    function show_path() {
+        var p_data={{p_data}};
+        p_data.forEach(function(d,i){   
+        var marker= new mapboxgl.Marker()
+        .setLngLat(d).addTo(map);
+        })
+        var url=assemblepathurl(p_data);
+        $.ajax({
+            dataType:"json",
+            url : url,
+            async:false,
+            success:function(data){json=data}
+        })
+        jdata = json.routes[0];
+        routes = jdata.geometry;
+        geoj ={
+            type: 'Features',
+            properties: {},
+            geometry: routes
+        }
+        geojson={
+            type:"FeatureCollection",
+            "features": []
+        }
+        geojson.features.push(geoj);
+        map.getSource('route').setData(geojson);
+    }
+    function assemblepathurl(p_data){
+        var p_string='https://api.mapbox.com/directions/v5/mapbox/walking/'+
+                 p_data.join(';')+
+                '?steps=true&geometries=geojson&access_token='+mapboxgl.accessToken
+        console.log(p_string)
+        return (p_string);
+    }
+</script>
+<body onload="show_path();"></body>
+<center>
+    <div id="btn_group">
+    <button id="like_button" onclick="sendlike()">Like this route!</button>
+    <button id="dislike_button" onclick="senddislike()">Maybe other route...</button>
+    </div>
+    <script type="text/javascript">
+        function sendlike() {
+            var taste = 'like'
+            var p_data = {{p_data}}
+
+            var form = new FormData() 
+            form.append('taste', taste) 
+            form.append('p_data', p_data)
+
+            axios.post('https://show-my-way.herokuapp.com/' +'{{u_id}}'+ '/rec', form)
+            .then(response => {
+                console.log('response', JSON.stringify(response))
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+        function senddislike() {
+            var taste = 'dislike'
+            var p_data = {{p_data}}
+
+            var form = new FormData() 
+            form.append('taste', taste) 
+            form.append('p_data',p_data)
+
+            axios.post('https://show-my-way.herokuapp.com/' + '{{u_id}}' + '/rec', form)
+            .then(response => {
+                console.log('response', JSON.stringify(response))
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+    </script>
+</center>
+{%endblock%}

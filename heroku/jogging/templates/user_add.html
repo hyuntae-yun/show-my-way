@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{%block title%}
+Add User
+{%endblock%}
+
+{%block button%}
+<ul class="nav nav-pills pull-right">
+  <li role="presentation" class="active"><a href="/">Home</a></li>
+  <li role="presentation"><a href="/user_add">Add User</a></li>
+  <li role="presentation"><a href="/user_mod">Modify User</a></li>
+  <li role="presentation"><a href="/user_del">Delete User</a></li>
+</ul>
+{%endblock%}          
+
+{%block main_body%}
+<style>
+  #add_button{
+        border-top-left-radius: 5px; 
+        border-bottom-left-radius: 5px; 
+        border-top-right-radius: 5px; 
+        border-bottom-right-radius: 5px; 
+        border: 1px solid skyblue; 
+        background-color: skyblue;
+        color: white; 
+        padding: 5px; 
+        margin-top: 10px
+    }
+    #ad_button:hover{
+        color:white; background-color: rgb(3, 130, 180);
+    }
+</style>
+<style type="text/css">
+  .input{    
+            height: 2.5em;
+            width: 220px;
+            padding: 0 10px;
+            box-shadow: 3px 3px 10px black;
+            outline: none;
+            border: none;
+            color:skyblue;
+       }  
+</style>
+<div class="row marketing">
+    <form action="/user_add" method="post">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th scope="row">Name</th>
+            <td><input type="text" name="user_name" class="input"></td>
+          </tr>
+          <tr>
+            <th scope="row">Sex</th>
+            <td>
+              <label for="gender">Male</label>
+              <input type="radio" id="gender" name="gender" value="male" >
+              <label for="gender">Female</label>
+              <input type="radio" id="gender" name="gender" value="female"></td>
+              
+          </tr>
+          <tr>
+            <th scope="row">Address</th>
+            <td><input type="text"name="addr" class="input"> </td>
+          </tr>
+          <tr>
+            <th scope="row">Height(cm)</th>
+            <td><input type="text" name=height class="input"></td>
+          </tr>
+          <tr>
+            <th scope="row">Weight(kg)</th>
+            <td><input type="text" name=weight class="input"></td>
+          </tr>
+          <tr>
+            <th scope="row">BornDate</th>
+            <td><input type=date id="birthday" name="birthday" class="input"></td>
+          </tr>
+        </tbody>
+    </table>
+    <input type="submit" id="add_button" value="submit"/>
+    </form>
+</div>
+{%endblock%}

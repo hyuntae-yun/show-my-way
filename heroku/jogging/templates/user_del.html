@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{%block title%}
+Delete User
+{%endblock%}
+
+{%block button%}
+<ul class="nav nav-pills pull-right">
+  <li role="presentation" class="active"><a href="/">Home</a></li>
+  <li role="presentation"><a href="/user_add">Add User</a></li>
+  <li role="presentation"><a href="/user_mod">Modify User</a></li>
+  <li role="presentation"><a href="/user_del">Delete User</a></li>
+</ul>
+{%endblock%}          
+
+{%block main_body%}
+<style>
+  select{    
+            height: 2.5em;
+            width: 220px;
+            padding: 0 10px;
+            box-shadow: 3px 3px 10px black;
+            outline: none;
+            border: none;
+            color:skyblue;
+       }  
+        #del_button{
+        border-top-left-radius: 5px; 
+        border-bottom-left-radius: 5px; 
+        border-top-right-radius: 5px; 
+        border-bottom-right-radius: 5px; 
+        border: 1px solid skyblue; 
+        background-color: skyblue;
+        color: white; 
+        padding: 5px; 
+        margin-top: 10px
+    }
+    #del_button:hover{
+        color:white; background-color: rgb(3, 130, 180);
+    }
+</style>
+<center>
+    <form method="POST" action="/user_del">
+       
+        <div class="nametag">
+            <select name="column">
+                {% for row in data %}
+                <option value={{row.id}} > {{row.id}} {{row.Name}} </option>
+                {% endfor %}
+            </select>
+            <button type="submit " id="del_button">
+                Delete
+            </button>
+        </div>
+    </form>
+</center>
+<br/>
+<center>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">User Name</th>
+            <th scope="col">Address</th>
+            <th scope="col">Height</th>
+            <th scope="col">Weight</th>
+          </tr>
+        </thead>
+        {% for row in data %}
+        <tbody>
+          <tr>
+            <th scope="row">{{ row.id }}</th>
+            <td>{{ row.Name }}</td>
+            <td>{{ row.Adress }}</td>
+            <td>{{ row.height }}</td>
+            <td>{{ row.weight }}</td>
+          </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    <br/>
+</center>
+{%endblock%}

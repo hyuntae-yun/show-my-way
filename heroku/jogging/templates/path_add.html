@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{%block title%}
+Add Points Group
+{%endblock%}
+
+{%block button%}
+<ul class="nav nav-pills pull-right">
+  <ul class="nav nav-pills pull-right">
+    <li role="presentation" class="active"><a href="/">Go back to main</a></li>
+    <li role="presentation" class="active"><a href="/{{u_id}}/">Home</a></li>
+    <li role="presentation"><a href="/{{u_id}}/add">Add Points Group</a></li>
+    <li role="presentation"><a href="/{{u_id}}/del">Delete Points Group</a></li>
+    <li role="presentation"><a href="/{{u_id}}/rec">Find path</a></li>
+  </ul>
+</ul>
+{%endblock%}          
+
+{%block main_body%}
+<meta charset='utf-8' />
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .truck {
+            margin: -10px -10px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            background: #3887be;
+            pointer-events: none;
+        }
+      #map {
+        position: relative;
+		    width: 700px;
+        height: 700px;
+        /* top-margin: -350px;
+        left-margin: -350px; */
+      }
+      #add_button{
+        border-top-left-radius: 5px; 
+        border-bottom-left-radius: 5px; 
+        border-top-right-radius: 5px; 
+        border-bottom-right-radius: 5px; 
+        border: 1px solid skyblue; 
+        background-color: skyblue;
+        color: white; 
+        padding: 5px; 
+        margin-top: 10px
+      }
+      #add_button:hover{
+          color:white; background-color: rgb(3, 130, 180);
+      }
+      input{    
+              height: 2.5em;
+              width: 220px;
+              padding: 0 10px;
+              box-shadow: 3px 3px 10px black;
+              outline: none;
+              border: none;
+              color:skyblue;
+      }
+    </style>
+    <div id='map' class='container'></div>
+    <script src="../static/js/mapbox_add.js"></script>
+    <script type="text/javascript">
+      function sendToServer() {
+          var path_name = document.getElementById("path_name").value;
+          var form = new FormData() 
+          form.append('path_name', path_name) 
+          form.append('dropoffs', JSON.stringify(dropoffs))
+          axios.post('https://show-my-way.herokuapp.com/' + '{{u_id}}' + '/add', form)
+          .then(response => {
+              console.log('response', JSON.stringify(response))
+          }).catch(error => {
+              console.log(error)
+          })
+      }
+    </script>
+    Path Name: <input type="text" id="path_name" name="path_name">
+    <button id="add_button" onclick="sendToServer()">submit</button>
+{%endblock%}

@@ -1,0 +1,91 @@
+{%extends 'base.html'%}
+
+{%block title%}
+My Jogging App
+{%endblock%}
+
+{%block button%}
+<ul class="nav nav-pills pull-right">
+  <li role="presentation" class="active"><a href="/">Home</a></li>
+  <li role="presentation"><a href="/user_add">Add User</a></li>
+  <li role="presentation"><a href="/user_mod">Modify User</a></li>
+  <li role="presentation"><a href="/user_del">Delete User</a></li>
+</ul>
+{%endblock%}          
+
+{%block main_body%}
+<style> 
+    .dropbtn { 
+        border-top-left-radius: 10px; 
+        border-bottom-left-radius: 10px; 
+        border-top-right-radius: 10px; 
+        border-bottom-right-radius: 10px; 
+        height: 2.5em;
+              width: 220px;
+        background-color:skyblue; 
+        color: white; 
+        padding: 16px; 
+        font-size: 16px; 
+        border: none; 
+        cursor: pointer; 
+    } 
+    .dropdown { 
+        position: relative; 
+        display: inline-block; 
+    } 
+
+    .dropdown-content { 
+        display: none; 
+        position: absolute; 
+        background-color: #f9f9f9; 
+        min-width: 160px; 
+        box-shadow: 0px 8px 16px  
+            0px rgba(0, 0, 0, 0.2); 
+        z-index: 1; 
+    } 
+
+    .dropdown-content a { 
+        color: black; 
+        padding: 12px 16px; 
+        text-decoration: none; 
+        display: block; 
+    } 
+
+    .dropdown-content a:hover { 
+        background-color: #f1f1f1 
+    } 
+
+    .dropdown:hover .dropdown-content { 
+        display: block; 
+    } 
+
+    .dropdown:hover .dropbtn { 
+        background-color: rgb(3, 130, 180); 
+    } 
+    input{    
+              height: 2.5em;
+              width: 220px;
+              padding: 0 10px;
+              box-shadow: 3px 3px 10px black;
+              outline: none;
+              border: none;
+              color:skyblue;
+    }
+    .button{
+        color:white;
+    }
+</style>
+<div class="container">
+    <div class="dropdown">
+        <button class="dropbtn">Select User</button>
+        <div class="dropdown-content">
+            {%for user in data%}
+            <form action="/{{user.id}}" method="get">
+                <input type="submit" herf="/{{user.id}}" value=" id: {{user.id}} Name: {{user.Name}}"   >                    
+                </input>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{%endblock%}

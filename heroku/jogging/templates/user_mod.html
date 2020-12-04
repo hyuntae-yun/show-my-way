@@ -1,0 +1,98 @@
+{%extends 'base.html'%}
+
+{%block title%}
+Modifiy User
+{%endblock%}
+
+{%block button%}
+<ul class="nav nav-pills pull-right">
+  <li role="presentation" class="active"><a href="/">Home</a></li>
+  <li role="presentation"><a href="/user_add">Add User</a></li>
+  <li role="presentation"><a href="/user_mod">Modify User</a></li>
+  <li role="presentation"><a href="/user_del">Delete User</a></li>
+</ul>
+{%endblock%}          
+
+{%block main_body%}
+<style>
+  select{    
+            height: 2.5em;
+            width: 220px;
+            padding: 0 10px;
+            box-shadow: 3px 3px 10px black;
+            outline: none;
+            border: none;
+            color:skyblue;
+       }  
+        input{    
+            height: 2.5em;
+            width: 220px;
+            padding: 0 10px;
+            box-shadow: 3px 3px 10px black;
+            outline: none;
+            border: none;
+            color:skyblue;
+        }
+        #mod_button{
+        border-top-left-radius: 5px; 
+        border-bottom-left-radius: 5px; 
+        border-top-right-radius: 5px; 
+        border-bottom-right-radius: 5px; 
+        border: 1px solid skyblue; 
+        background-color: skyblue;
+        color: white; 
+        padding: 5px; 
+        margin-top: 10px
+    }
+    #mod_button:hover{
+        color:white; background-color: rgb(3, 130, 180);
+    }
+</style>
+<center>
+    <form method="POST" action="/user_mod">
+       
+        <div class="nametag">
+            <input id="u_id" name="u_id" type="text" placeholder="No id inserted.." />      
+            <input id="val" name="val" type="text" placeholder="No value inserted.." /> 
+            
+        </div>
+        <div class="nametag">
+          <select name="column">
+            <option value=1 selected="selected" > Name </option>
+            <option value=2> Adress </option>
+            <option value=3> weight </option>  
+            <option value=4> height </option>  
+          </select>
+          <button type="submit " id="mod_button">
+                change
+          </button>
+        </div>
+    </form>
+</center>
+<br/>
+<center>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">User Name</th>
+            <th scope="col">Address</th>
+            <th scope="col">Height</th>
+            <th scope="col">Weight</th>
+          </tr>
+        </thead>
+        {% for row in data %}
+        <tbody>
+          <tr>
+            <th scope="row">{{ row.id }}</th>
+            <td>{{ row.Name }}</td>
+            <td>{{ row.Adress }}</td>
+            <td>{{ row.height }}</td>
+            <td>{{ row.weight }}</td>
+          </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    <br/>
+</center>
+{%endblock%}
