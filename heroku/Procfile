@@ -1,1 +1,1 @@
-web: gunicorn app_name:jogging
+web: gunicorn 'jogging:create_app()'
