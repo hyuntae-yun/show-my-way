@@ -10,6 +10,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
     migrate.init_app(app, db)
+    
     app.register_blueprint(user_routes.user_routes)
     app.register_blueprint(map_routes.map_routes, url_prefix='/')
     return app
